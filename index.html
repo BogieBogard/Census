@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Census Data Visualization</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/png" href="app/public/assets/images/favicon.ico" />
+    <!-- Start Head Links for Bootstrap Template -->
+    <!-- Bootstrap core CSS -->
+    <link href="app/public/assets/bootstrap/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom fonts for this template -->
+    <link href="app/public/assets/bootstrap/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Serif+JP" rel="stylesheet">
+    <!-- Plugin CSS -->
+    <link href="app/public/assets/bootstrap/vendor/magnific-popup/magnific-popup.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="app/public/assets/bootstrap/css/creative.css" rel="stylesheet">
+    <!-- End Head Links for Bootstrap Template -->
+
+    <!-- Start Custom Head Links -->
+    <!-- Latest compiled and minified CSS & JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.0.0/lumen/bootstrap.min.css" />
+    <link rel="stylesheet" href="app/public/assets/css/custom.css" media="screen" title="no title">
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- End Custom Head Links -->
+
+</head>
+
+<body id="page-top">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">US Census Data Visualization</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="#search">Search</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="#about">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="masthead text-center text-white d-flex">
+        <div class="container my-auto">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <h1 class="text-uppercase">
+                        <strong>Explore Census Data</strong>
+                    </h1>
+                    <hr>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mx-auto text-center googleFontsRaleway mobileOnly">
+                <section>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-9 mx-auto">
+                                <h1 class="googleFontsNoto text-center">About</h1>
+                                <h4 id="openSourceToolHeading" class="section-heading text-white googleFontsRaleway text-center">Open-Source Tool for Analyzing American Political, Economic, and Social Characteristics</h4>
+                                <hr class="light my-4">
+                                <p class="text-faded mb-4">The goal of our open-source government data project is to make public data easier to navigate by providing modern visualizations, a thoughtful assortment of public resources, and organized, transparent downloadable
+                                    data. Researchers and businesses have routinely leveraged public data to reach new social insights and make smarter business decisions; we hope to help these groups by creating a superior tool for analyzing all kinds of American
+                                    characteristics.
+                            </div>
+                        </div>
+                    </div>
+                    <h4 id="mobileText">The results will display when you press "Search"</h4>
+
+                </section>
+            </div>
+
+            <!-- Start Search Bar -->
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div id="wrap">
+                        <div class="center">
+                            <div id="search">
+                                <form autocomplete="off" group="search" method="POST">
+                                    <span class="ac ac-hidden autocomplete"></span>
+
+                                    <input type="text" name="myCountry" id="city-search" placeholder="Type a US city, Ex: Austin, TX">
+                                    <button id="search-btn">Search</button>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Search Bar -->
+        </div>
+    </header>
+
+
+    <div id="mobileHideForAutocomplete">
+        <section class="bg-primary" id="firstGraphicalSection">
+            <!-- Display that shows what city the user searched for -->
+            <div class="col-lg-6 mx-auto text-center googleFontsRaleway" id="displayCityName"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 mx-auto text-center">
+                        <h1 id="racialDemographicsSubtitleStyle" class="timesNewRomanText googleFontsNoto">Racial Demographics
+                        </h1>
+
+                        <!-- Creating row and col-lg-6 within this existing col-lg-6 to give the pie chart a different plane than its accompanying text, the unique id is used to push it down -->
+                        <div class="row">
+
+                            <div class="col-lg-6 mx-auto text-center">
+
+                                <h1 id="pushPieChartDown"></h1>
+                                <!-- Start Default Pie Chart -->
+                                <div id="pieChart" class="chart customPieChart">
+                                    <!-- <h1 id="pushCustomPieChartDown"></h1> -->
+                                </div>
+                                <div class="customPieChart"></div>
+                                <!-- End Default Pie Chart -->
+                            </div>
+                        </div>
+
+                        <div id="rowPieChartEditing" class="googleFontOpenSans">
+                            <h3>Percentage of the Population</h3>
+                            <h6 id="graphWhitePopulation">White alone: </h6>
+                            <h6 id="graphBlackPopulation">Black alone: </h6>
+                            <h6 id="graphAsianPopulation">Asian alone: </h6>
+                            <h6 id="graphHispanicOrLatinoPopulation">Hispanic or Latino alone:</h6>
+                            <h6 id="graphAmericanIndianAndAlaskanNativePopulation">American Indian and Alaskan Native alone: </h6>
+                            <h6 id="graphNativeHawaiianAndPacificIslanderPopulation">Native Hawaiian and Pacific Islander alone: </h6>
+                            <h6 id="graphTwoOrMoreRacesPopulation">Two or More Races: </h6>
+                        </div>
+                        <br>
+                        <br>
+
+
+                    </div>
+
+
+                    <div class="col-lg-6 mx-auto text-center timesNewRomanText">
+                        <h1 id="generalPopulationStatisticsHeading" class="timesNewRomanText googleFontsNoto">General Population Statistics
+                        </h1>
+
+                        <!-- Start Default Bar Graph -->
+                        <ul id="shiftGPSContentUp" class="bar-graph googleFontOpenSans">
+                            <li>
+                                <h4>Mean Family Income
+                                    <p id="textMeanFamilyIncome"></p>
+                                </h4>
+                            </li>
+                            <li>
+                                <h4>Median Family Income
+                                    <p id="textMedianFamilyIncome"></p>
+                                </h4>
+                            </li>
+                            <li>
+                                <h4>Unemployment Rate (2010)
+                                    <p id="textUnemploymentRate2010"></p>
+                                </h4>
+                                <div id="graphUnemploymentRate2010" class="bar-wrap"><span class="bar-fill" style="width: 0%;"></span></div>
+                            </li>
+                            <li>
+                                <h4>Percentage of the Population Above Age 65
+                                    <p id="textPercentPopulationOver65"></p>
+                                    </p>
+                                </h4>
+                                <div id="graphPercentPopulationOver65" class="bar-wrap"><span class="bar-fill" style="width: 0%;"></span></div>
+                            </li>
+                        </ul>
+
+                        <!-- End Default Bar Graph -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h1 id="politicalGraphHeading" class="section-heading googleFontsNoto">Percentage of Popular Vote by Political Party</h1>
+                        <hr class="my-4">
+                    </div>
+                </div>
+            </div>
+            <!-- Start US Default Bar Graph 2 -->
+            <div class="container" id="politicalGraph">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <div id="bar-chart">
+                            <div class="graph">
+                                <ul class="x-axis">
+                                    <li><span>1992</span></li>
+                                    <li><span>1996</span></li>
+                                    <li><span>2000</span></li>
+                                    <li><span>2004</span></li>
+                                    <li><span>2008</span></li>
+                                </ul>
+                                <ul class="y-axis">
+                                    <li><span>100%</span></li>
+                                    <li><span>75%</span></li>
+                                    <li><span>50%</span></li>
+                                    <li><span>25%</span></li>
+                                    <li><span>0</span></li>
+                                </ul>
+                                <div class="bars">
+                                    <div class="bar-group" id="repVote1992">
+                                        <div id="demVote1992"></div>
+                                    </div>
+                                    <div class="bar-group" id="repVote1996">
+                                        <div id="demVote1996"></div>
+                                    </div>
+                                    <div class="bar-group" id="repVote2000">
+                                        <div id="demVote2000"></div>
+                                    </div>
+                                    <div class="bar-group" id="repVote2004">
+                                        <div id="demVote2004"></div>
+                                    </div>
+                                    <div class="bar-group" id="repVote2008">
+                                        <div id="demVote2008"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5 class="text-center googleFontsNoto">Legend</h5>
+                            <p class="text-center" id="legendPoliticalGraph1">
+                                <div class="text-center googleFontsRaleway">Republican Party Vote Percentage</div>
+                                <p>
+                                    <p class="text-center" id="legendPoliticalGraph2">
+                                        <div class="text-center googleFontsRaleway">Democratic Party Vote Percentage</div>
+                                    </p>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center" id="legendPoliticalSpacing">
+
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- End US Default Bar Graph 2 -->
+            <div class="container">
+                <h1 class="text-center section-heading googleFontsNoto">Income Distribution</h1>
+                <hr class="my-4">
+                <div class="row">
+                    <!-- Start Income Distribution Graph -->
+                    <!-- Default graph before searching a city -->
+                    <canvas id="myChart" width="400" height="300"></canvas>
+                    <!-- Custom city graph -->
+                    <canvas id="myChartCustom" width="400" height="300"></canvas>
+                    <!-- End Income Distribution Graph -->
+                </div>
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9 mx-auto">
+                        <h1 class="googleFontsNoto text-center">About</h1>
+                        <h4 id="openSourceToolHeading" class="section-heading text-white googleFontsRaleway text-center">Open-Source Tool for Analyzing American Political, Economic, and Social Characteristics</h4>
+                        <hr class="light my-4">
+                        <p class="text-faded mb-4">This application uses data from a unique, previously unutilized dataset collected by the United States Census Bureau in July 2009. While the bureau does offer some tools for exploring their collected statistics, their tools are
+                            often dated, limited in functionality, and closed source (or proprietary software).
+                            <br><br> The goal of our open-source government data project is to make public data easier to navigate by providing modern visualizations, a thoughtful assortment of public resources, and organized, transparent downloadable
+                            data. Researchers and businesses have routinely leveraged public data to reach new social insights and make smarter business decisions; we hope to help these groups by creating a superior tool for analyzing all kinds of American
+                            characteristics.
+                            <br><br> The data that powers this app can be found in on the US Census Bureau's website in its raw form <a href="https://www.census.gov/support/USACdataDownloads.html">here.</a> But we do provide a more intuitively organized
+                            version of the data in a single file freely available to download with the button below.
+                        </p>
+
+                        <a class="btn btn-light btn-xl js-scroll-trigger googleFontsRaleway text-center" href="app/public/assets/data/US-Census-Data-Master-File.xlsx">Download
+                            Data Spreadsheet</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-light py-5">
+            <div class="container">
+                <div class="small text-center text-muted">This software tool was created by Matthew Bogard, Tyrell Bopp, and Amanda Thi Aslkjfa</div>
+                <div class="small text-center text-muted">Copyright &copy; 2018-Present</div>
+            </div>
+
+        </footer>
+
+        <!-- Bootstrap core JavaScript -->
+        <script src="app/public/assets/bootstrap/vendor/jquery/jquery.min.js"></script>
+        <script src="app/public/assets/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Plugin JavaScript -->
+        <script src="app/public/assets/bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+        <script src="app/public/assets/bootstrap/vendor/scrollreveal/scrollreveal.min.js"></script>
+        <script src="app/public/assets/bootstrap/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
+
+        <!-- CDN for Chart.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js" type="text/javascript"></script>
+
+        <!-- Custom scripts for this template -->
+        <script src="app/public/assets/bootstrap/js/creative.min.js"></script>
+
+        <!-- Custom script to handle search event to API  -->
+        <script src="app/public/assets/js/api-static.js" type="text/javascript"></script>
+        <script src="app/public/assets/js/autocomplete.js" type="text/javascript"></script>
+        <script src="app/public/assets/js/google.js" type="text/javascript"></script>
+</body>
+
+</html>
